@@ -1,7 +1,9 @@
-import sys,os
+import sys, os
+
 sys.path.append(os.path.dirname(__file__) + os.sep + '../')
 
 from utils.general import download, os, Path
+
 
 def visdrone2yolo(dir):
     from PIL import Image
