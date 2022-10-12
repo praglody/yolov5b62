@@ -83,6 +83,9 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
     if not evolve:
         yaml_save(save_dir / 'hyp.yaml', hyp)
         yaml_save(save_dir / 'opt.yaml', vars(opt))
+        if cfg:
+            with open(save_dir / 'cfg.yaml', 'w', encoding="utf-8") as f:
+                f.write(Path(cfg).read_text(encoding="utf-8"))      # 保存网络结构文件
 
     # Loggers
     data_dict = None
@@ -479,10 +482,10 @@ def parse_opt(known=False):
 
 def main(opt, callbacks=Callbacks()):
     # Checks
-    if RANK in {-1, 0}:
-        print_args(vars(opt))
-        check_git_status()
-        check_requirements()
+    print_args(vars(opt))
+    # if RANK in {-1, 0}:
+    #     check_git_status()
+    #     check_requirements()
 
     # Resume
     if opt.resume and not (check_wandb_resume(opt) or opt.evolve):  # resume from specified or most recent last.pt
