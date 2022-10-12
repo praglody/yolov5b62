@@ -73,6 +73,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
     last, best = w / 'last.pt', w / 'best.pt'
 
     # Hyperparameters
+    hyp_str = hyp
     if isinstance(hyp, str):
         with open(hyp, errors='ignore') as f:
             hyp = yaml.safe_load(f)  # load hyps dict
@@ -81,8 +82,12 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
 
     # Save run settings
     if not evolve:
-        yaml_save(save_dir / 'hyp.yaml', hyp)
         yaml_save(save_dir / 'opt.yaml', vars(opt))
+        if isinstance(hyp_str, str):
+            with open(save_dir / 'hyp.yaml', 'w', encoding="utf-8") as f:
+                f.write(Path(hyp_str).read_text(encoding="utf-8"))      # 保存超参数文件
+        else:
+            yaml_save(save_dir / 'hyp.yaml', hyp)
         if cfg:
             with open(save_dir / 'cfg.yaml', 'w', encoding="utf-8") as f:
                 f.write(Path(cfg).read_text(encoding="utf-8"))      # 保存网络结构文件
